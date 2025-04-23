@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .auth-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .switch-form a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            color: #5cb85c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+        
+        .form-container {
+            transition: transform 0.3s ease;
+        }
+        
+        #loginForm {
+            transform: translateX(0);
+        }
+        
+        #signupForm {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            transform: translateX(120%);
+        }
+        
+        .active-form #loginForm {
+            transform: translateX(-120%);
+        }
+        
+        .active-form #signupForm {
+            transform: translateX(0);
+        }
+        
+        .password-strength {
+            height: 5px;
+            background: #eee;
+            margin-top: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            background: red;
+            transition: width 0.3s, background 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container" id="authContainer">
+        <div class="form-container">
+            <form id="loginForm">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="loginUsername">Username or Email</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                    <div id="loginUsernameError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <div id="loginPasswordError" class="error-message"></div>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit" id="loginButton">Login</button>
+                <div id="loginStatus" class="error-message"></div>
+                <div class="switch-form">
+                    Don't have an account? <a id="showSignup">Sign up</a>
+                </div>
+            </form>
+
+            <form id="signupForm">
+                <h2>Sign Up</h2>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" name="name" required>
+                    <div id="signupNameError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" name="email" required>
+                    <div id="signupEmailError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" name="username" required>
+                    <div id="signupUsernameError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" name="password" required>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
+                    <div id="signupPasswordError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" name="confirmPassword" required>
+                    <div id="signupConfirmPasswordError" class="error-message"></div>
+                </div>
+                <button type="submit" id="signupButton">Sign Up</button>
+                <div id="signupStatus" class="error-message"></div>
+                <div class="switch-form">
+                    Already have an account? <a id="showLogin">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const authContainer = document.getElementById('authContainer');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const showSignup = document.getElementById('showSignup');
+            const showLogin = document.getElementById('showLogin');
+            const passwordInput = document.getElementById('signupPassword');
+            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+
+            // Form switching
+            showSignup.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.classList.add('active-form');
+            });
+            
+            showLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.classList.remove('active-form');
+            });
+
+            // Password strength indicator
+            passwordInput.addEventListener('input', function() {
+                const strength = calculatePasswordStrength(this.value);
+                updateStrengthIndicator(strength);
+            });
+
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                
+                // Length contributes up to 50%
+                strength += Math.min(50, (password.length / 12) * 50);
+                
+                // Contains both lower and uppercase letters
+                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 10;
+                
+                // Contains numbers
+                if (password.match(/([0-9])/)) strength += 10;
+                
+                // Contains special characters
+                if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength += 20;
+                
+                // Contains both letters and numbers
+                if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) strength += 10;
+                
+                return Math.min(100, strength);
+            }
+
+            function updateStrengthIndicator(strength) {
+                passwordStrengthBar.style.width = strength + '%';
+                
+                if (strength < 30) {
+                    passwordStrengthBar.style.backgroundColor = 'red';
+                } else if (strength < 70) {
+                    passwordStrengthBar.style.backgroundColor = 'orange';
+                } else {
+                    passwordStrengthBar.style.backgroundColor = 'green';
+                }
+            }
+
+            // Login form handling
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                document.getElementById('loginUsernameError').textContent = '';
+                document.getElementById('loginPasswordError').textContent = '';
+                document.getElementById('loginStatus').textContent = '';
+                
+                // Get values
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                const remember = document.getElementById('remember').checked;
+                
+                // Validate inputs
+                let isValid = true;
+                
+                if (!username) {
+                    document.getElementById('loginUsernameError').textContent = 'Username or email is required';
+                    isValid = false;
+                }
+                
+                if (!password) {
+                    document.getElementById('loginPasswordError').textContent = 'Password is required';
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                // Simulate login process
+                simulateLogin(username, password, remember);
+            });
+            
+            // Signup form handling
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                document.getElementById('signupNameError').textContent = '';
+                document.getElementById('signupEmailError').textContent = '';
+                document.getElementById('signupUsernameError').textContent = '';
+                document.getElementById('signupPasswordError').textContent = '';
+                document.getElementById('signupConfirmPasswordError').textContent = '';
+                document.getElementById('signupStatus').textContent = '';
+                
+                // Get values
+                const name = document.getElementById('signupName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim();
+                const username = document.getElementById('signupUsername').value.trim();
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                
+                // Validate inputs
+                let isValid = true;
+                
+                if (!name) {
+                    document.getElementById('signupNameError').textContent = 'Full name is required';
+                    isValid = false;
+                }
+                
+                if (!email) {
+                    document.getElementById('signupEmailError').textContent = 'Email is required';
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    document.getElementById('signupEmailError').textContent = 'Please enter a valid email';
+                    isValid = false;
+                }
+                
+                if (!username) {
+                    document.getElementById('signupUsernameError').textContent = 'Username is required';
+                    isValid = false;
+                } else if (username.length < 4) {
+                    document.getElementById('signupUsernameError').textContent = 'Username must be at least 4 characters';
+                    isValid = false;
+                }
+                
+                if (!password) {
+                    document.getElementById('signupPasswordError').textContent = 'Password is required';
+                    isValid = false;
+                } else if (password.length < 8) {
+                    document.getElementById('signupPasswordError').textContent = 'Password must be at least 8 characters';
+                    isValid = false;
+                }
+                
+                if (password !== confirmPassword) {
+                    document.getElementById('signupConfirmPasswordError').textContent = 'Passwords do not match';
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                // Simulate signup process
+                simulateSignup(name, email, username, password);
+            });
+            
+            // Email validation helper
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Simulated login function
+            function simulateLogin(username, password, remember) {
+                const loginButton = document.getElementById('loginButton');
+                loginButton.disabled = true;
+                loginButton.textContent = 'Logging in...';
+                
+                setTimeout(() => {
+                    // Check localStorage for registered users
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const user = users.find(u => 
+                        (u.username === username || u.email === username) && 
+                        u.password === password
+                    );
+                    
+                    if (user) {
+                        // Save to localStorage if "Remember me" is checked
+                        if (remember) {
+                            localStorage.setItem('username', username);
+                            localStorage.setItem('rememberMe', 'true');
+                        } else {
+                            localStorage.removeItem('username');
+                            localStorage.setItem('rememberMe', 'false');
+                        }
+                        
+                        document.getElementById('loginStatus').textContent = 'Login successful! Redirecting...';
+                        document.getElementById('loginStatus').className = 'success-message';
+                        
+                        setTimeout(() => {
+                            alert(`Welcome back, ${user.name}! In a real app, you would be redirected now.`);
+                        }, 1000);
+                    } else {
+                        document.getElementById('loginStatus').textContent = 'Invalid username or password';
+                        document.getElementById('loginStatus').className = 'error-message';
+                    }
+                    
+                    loginButton.disabled = false;
+                    loginButton.textContent = 'Login';
+                }, 1500);
+            }
+            
+            // Simulated signup function
+            function simulateSignup(name, email, username, password) {
+                const signupButton = document.getElementById('signupButton');
+                signupButton.disabled = true;
+                signupButton.textContent = 'Creating account...';
+                
+                setTimeout(() => {
+                    // Get existing users from localStorage
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    
+                    // Check if username or email already exists
+                    const usernameExists = users.some(u => u.username === username);
+                    const emailExists = users.some(u => u.email === email);
+                    
+                    if (usernameExists) {
+                        document.getElementById('signupUsernameError').textContent = 'Username already taken';
+                        signupButton.disabled = false;
+                        signupButton.textContent = 'Sign Up';
+                        return;
+                    }
+                    
+                    if (emailExists) {
+                        document.getElementById('signupEmailError').textContent = 'Email already registered';
+                        signupButton.disabled = false;
+                        signupButton.textContent = 'Sign Up';
+                        return;
+                    }
+                    
+                    // Create new user
+                    const newUser = {
+                        name: name,
+                        email: email,
+                        username: username,
+                        password: password // In real app, this would be hashed
+                    };
+                    
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    document.getElementById('signupStatus').textContent = 'Account created successfully! Redirecting to login...';
+                    document.getElementById('signupStatus').className = 'success-message';
+                    
+                    setTimeout(() => {
+                        // Clear form and switch to login
+                        signupForm.reset();
+                        passwordStrengthBar.style.width = '0%';
+                        authContainer.classList.remove('active-form');
+                        signupButton.disabled = false;
+                        signupButton.textContent = 'Sign Up';
+                    }, 2000);
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
